@@ -96,6 +96,10 @@
             public decimal SaldoConta;
             #endregion
 
+            #region Listagem dos Movimentos
+            public List<Movimento> Movimentos { get; set; }
+            #endregion
+
             #region Função no qual define o Conta (funciona da mesma maneira que a função CriarConta)
             public Conta(int N_Conta, int IBAN, DateTime DataAbertura, string TipoConta, decimal SaldoConta)
             {
@@ -112,8 +116,8 @@
             {
                 int N_Conta = 0;
                 int IBAN = 0;
-                Console.WriteLine("Digite a Data de Abertura da Conta: ");
-                DateTime DataAbertura = DateTime.Parse(Console.ReadLine());
+                DateTime DataAbertura = DateTime.Now;
+                Console.WriteLine($"Data de Abertura: {DataAbertura}");
                 Console.WriteLine("Digite o Tipo de Conta: ");
                 string TipoConta = Console.ReadLine();
                 Console.WriteLine("Digite o Saldo da Conta: ");
@@ -150,7 +154,7 @@
             public static Cartao LerCartao()
             {
                 int N_Cartao = 0;
-                DateTime DataValidade = 0;
+                DateTime DataValidade = DateTime.Now.AddYears(4);
                 Console.WriteLine("Digite o Saldo do Cartão: ");
                 decimal SaldoCartao = Decimal.Parse(Console.ReadLine());
                 Console.WriteLine("Digite um código PIN do Cartão: ");
@@ -163,11 +167,14 @@
             #endregion
         }
 
+        class Movimento
+        {
+
+        }
 
         static void Main(string[] args)
         {
             //Cliente cliente = Cliente.LerCliente();
-
 
         }
     }
