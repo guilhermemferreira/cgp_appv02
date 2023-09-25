@@ -36,7 +36,9 @@
             struct cartao
             {
                 public int N_Cartao;
-                public DateTime
+                public DateTime DataValidade;
+                public int SaldoCartao;
+                public int Codigo;
             }
         }
         static void Main(string[] args)
