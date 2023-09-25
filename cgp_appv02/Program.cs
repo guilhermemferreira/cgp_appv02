@@ -93,11 +93,11 @@
             public int IBAN;
             public DateTime DataAbertura;
             public string TipoConta;
-            public int SaldoConta;
+            public decimal SaldoConta;
             #endregion
 
             #region Função no qual define o Conta (funciona da mesma maneira que a função CriarConta)
-            public Conta(int N_Conta, int IBAN, DateTime DataAbertura, string TipoConta, int SaldoConta)
+            public Conta(int N_Conta, int IBAN, DateTime DataAbertura, string TipoConta, decimal SaldoConta)
             {
                 this.N_Conta = N_Conta;
                 this.IBAN = IBAN;
@@ -106,6 +106,25 @@
                 this.SaldoConta = SaldoConta;
             }
             #endregion
+
+            #region Função Ler Conta
+            public static Conta LerConta()
+            {
+                int N_Conta = 0;
+                int IBAN = 0;
+                Console.WriteLine("Digite a Data de Abertura da Conta: ");
+                DateTime DataAbertura = DateTime.Parse(Console.ReadLine());
+                Console.WriteLine("Digite o Tipo de Conta: ");
+                string TipoConta = Console.ReadLine();
+                Console.WriteLine("Digite o Saldo da Conta: ");
+                decimal SaldoConta = Decimal.Parse(Console.ReadLine());
+
+                Conta conta = new Conta(N_Conta, IBAN, DataAbertura, TipoConta, SaldoConta);
+
+                return conta;
+            }
+            #endregion
+
         }
 
         class Cartao
@@ -113,20 +132,37 @@
             #region Estrutura do Cartão
             public int N_Cartao;
             public DateTime DataValidade;
-            public int SaldoCartao;
+            public decimal SaldoCartao;
             public int Codigo;
             #endregion
 
             #region Função no qual define o Cartão (funciona da mesma maneira que a função CriarCartão)
-            public Cartao(int N_Cartao, DateTime DataValidade, int SaldoCartao, int Codigo)
+            public Cartao(int N_Cartao, DateTime DataValidade, decimal SaldoCartao, int Codigo)
             {
                 this.N_Cartao = N_Cartao;
                 this.DataValidade = DataValidade;
                 this.SaldoCartao = SaldoCartao;
                 this.Codigo = Codigo;
             }
+            #endregion
+
+            #region Função Ler Cartão
+            public static Cartao LerCartao()
+            {
+                int N_Cartao = 0;
+                DateTime DataValidade = 0;
+                Console.WriteLine("Digite o Saldo do Cartão: ");
+                decimal SaldoCartao = Decimal.Parse(Console.ReadLine());
+                Console.WriteLine("Digite um código PIN do Cartão: ");
+                int Codigo = Convert.ToInt32(Console.ReadLine());
+
+                Cartao cartao = new Cartao(N_Cartao, DataValidade, SaldoCartao, Codigo);
+
+                return cartao;
+            }
+            #endregion
         }
-        #endregion
+
 
         static void Main(string[] args)
         {
