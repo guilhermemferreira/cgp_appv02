@@ -4,6 +4,7 @@
     {
         class Cliente
         {
+            #region Estrutaração Cliente
             public string Nome;
             public string Morada;
             public int NIF;
@@ -12,10 +13,14 @@
             public int Telefone;
             public string Nacionalidade;
             public decimal SaldoTotal;
+            #endregion
 
+            #region Lista de Associação das Contas e dos Cartões ao Cliente
             public List<Conta> Contas { get; set; }
             public List<Cartao> Cartoes { get; set; }
+            #endregion
 
+            #region Função no qual define o Cliente (funciona da mesma maneira que a função CriarCliente)
             public Cliente(string Nome, string Morada, int NIF, int NIPC, DateTime DataNascimento, int Telefone, string Nacionalidade, decimal SaldoTotal)
             {
                 this.Nome = Nome;
@@ -30,8 +35,10 @@
                 this.Contas = new List<Conta>();
                 this.Cartoes = new List<Cartao>();
             }
+            #endregion
 
-            public static Cliente CriarCliente()
+            #region Ler Cliente
+            public static Cliente LerCliente()
             {
                 Console.WriteLine("Insira o nome do cliente:");
                 string Nome = Console.ReadLine();
@@ -54,7 +61,9 @@
 
                 return cliente;
             }
+            #endregion
 
+            #region Funções de Adicionar e Obter Contas e Cartões do Cliente
             public void AdicionarConta(Conta conta)
             {
                 this.Contas.Add(conta);
@@ -74,16 +83,20 @@
             {
                 return this.Cartoes;
             }
+            #endregion
         }
 
         class Conta
         {
+            #region Estruturação de Conta
             public int N_Conta;
             public int IBAN;
             public DateTime DataAbertura;
             public string TipoConta;
             public int SaldoConta;
+            #endregion
 
+            #region Função no qual define o Conta (funciona da mesma maneira que a função CriarConta)
             public Conta(int N_Conta, int IBAN, DateTime DataAbertura, string TipoConta, int SaldoConta)
             {
                 this.N_Conta = N_Conta;
@@ -92,15 +105,19 @@
                 this.TipoConta = TipoConta;
                 this.SaldoConta = SaldoConta;
             }
+            #endregion
         }
 
         class Cartao
         {
+            #region Estrutura do Cartão
             public int N_Cartao;
             public DateTime DataValidade;
             public int SaldoCartao;
             public int Codigo;
+            #endregion
 
+            #region Função no qual define o Cartão (funciona da mesma maneira que a função CriarCartão)
             public Cartao(int N_Cartao, DateTime DataValidade, int SaldoCartao, int Codigo)
             {
                 this.N_Cartao = N_Cartao;
@@ -109,10 +126,11 @@
                 this.Codigo = Codigo;
             }
         }
+        #endregion
 
         static void Main(string[] args)
         {
-            //Cliente cliente = Cliente.CriarCliente();
+            //Cliente cliente = Cliente.LerCliente();
 
 
         }
