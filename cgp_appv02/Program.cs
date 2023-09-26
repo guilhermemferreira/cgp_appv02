@@ -37,6 +37,22 @@
             }
             #endregion
 
+            #region Definição de Quantos Clientes | Criação de Array
+            static int QuantosClientes()
+            {
+                Console.WriteLine("Introdusa o número de Clientes que Deseja Criar: ");
+                int quantosclientes = Convert.ToInt32(Console.ReadLine());
+
+                return quantosclientes;
+            }
+
+            static Cliente[] ArrayCliente(int quantosclientes)
+            {
+                Cliente[] arraycliente = new Cliente[quantosclientes];
+                return arraycliente;
+            }
+            #endregion
+
             #region Ler Cliente
             public static Cliente LerCliente()
             {
@@ -63,27 +79,36 @@
             }
             #endregion
 
-            #region Funções de Adicionar e Obter Contas e Cartões do Cliente
-            public void AdicionarConta(Conta conta)
+            #region Ler Clientes Array
+            static Cliente[] LerClientesArray(Cliente[] arraycliente, int quantosclientes)
             {
-                this.Contas.Add(conta);
-            }
+                Cliente cliente;
+                for(int i = 0; i < quantosclientes; i++)
+                {
+                    Console.WriteLine("Aluno {0}", i + 1);
+                    cliente = LerCliente();
+                    arraycliente[i] = cliente;
+                }
 
-            public void AdicionarCartao(Cartao cartao)
-            {
-                this.Cartoes.Add(cartao);
-            }
-
-            public List<Conta> ObterContas()
-            {
-                return this.Contas;
-            }
-
-            public List<Cartao> ObterCartoes()
-            {
-                return this.Cartoes;
+                return arraycliente;
             }
             #endregion
+
+            static void ClienteEcra(Cliente cliente)
+            {
+                Console.WriteLine("Cliente: {0}, {1}: {2}.",
+                    cliente.Nome, cliente.NIF, cliente.Telefone);
+            }
+
+            static void ClientesEcra(Cliente[] arraycliente, int quantosclientes)
+            {
+                Cliente cliente;
+                for(int i = 0; i < quantosclientes; i++)
+                {
+                    cliente = arraycliente[i];
+                    ClienteEcra(cliente);
+                }
+            }
         }
 
         class Conta
@@ -92,8 +117,13 @@
             public int N_Conta;
             public int IBAN;
             public DateTime DataAbertura;
-            public string TipoConta;
             public decimal SaldoConta;
+
+            struct TipoConta
+            {
+                public string NomeConta;
+                public decimal TaxaJuros;
+            }
             #endregion
 
             #region Listagem dos Movimentos
@@ -167,14 +197,10 @@
             #endregion
         }
 
-        class Movimento
-        {
-
-        }
-
         static void Main(string[] args)
         {
             //Cliente cliente = Cliente.LerCliente();
+            List<Cliente> clientes = new List<Cliente>();
 
         }
     }
