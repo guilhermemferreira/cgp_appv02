@@ -226,6 +226,13 @@ namespace cgp_appv02
         static void Main(string[] args)
         {
             List<cliente> clientes = new List<cliente>();
+            List<conta> contas = new List<conta>();
+            List<cartao> cartoes = new List<cartao>();
+
+            conta[] conta = null;
+            cartao[] cartao = null;
+
+            int quantascontas = 0;
 
             int opcao;
             do
@@ -240,6 +247,16 @@ namespace cgp_appv02
 
                     case 2:
                         EscreverClientesEcra(clientes);
+                        break;
+
+                    case 3:
+                        quantascontas = QuantasContas();
+                        conta = CriarArrayConta(quantascontas);
+                        LerContas(conta, quantascontas);
+                        break;
+
+                    case 4:
+                        EscreverContas(conta, quantascontas);
                         break;
                 }
 
