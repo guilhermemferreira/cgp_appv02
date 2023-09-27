@@ -9,6 +9,7 @@ namespace cgp_appv02
         #region Estrutura Clientes
         struct cliente
         {
+            public int ID;
             public string Nome;
             public string Morada;
             public int NIF;
@@ -17,9 +18,14 @@ namespace cgp_appv02
             public int Telefone;
             public string Nacionalidade;
         }
+
+        static int utlimoClienteID = 0;
+
         static cliente CriarCliente()
         {
             cliente cliente;
+
+            cliente.ID = ++utlimoClienteID;
             Console.WriteLine("Digite o Nome do Cliente: ");
             cliente.Nome = Console.ReadLine();
             Console.WriteLine("Digite a Morada do Cliente: ");
@@ -40,8 +46,8 @@ namespace cgp_appv02
 
         static void EscreverClienteEcra(cliente cliente)
         {
-            Console.WriteLine("Nome: {0}; NIF: {1}; Nacionalidade {2}",
-                cliente.Nome, cliente.NIF, cliente.Nacionalidade);
+            Console.WriteLine("Nome: {0}; NIF: {1}; Nacionalidade {2}; ID: {3}",
+                cliente.Nome, cliente.NIF, cliente.Nacionalidade, cliente.ID);
         }
 
         static void EscreverClientesEcra(List<cliente> clientes)
@@ -57,6 +63,7 @@ namespace cgp_appv02
         #region Conta
         struct conta
         {
+            public int IDCliente;
             public int NConta;
             public int IBAN;
             public DateTime DataAbertura;
@@ -67,13 +74,62 @@ namespace cgp_appv02
         static conta CriarConta(int NConta, int IBAN, DateTime DataAbertura, string TipoConta, decimal SaldoTotal)
         {
             conta conta;
-            conta.NConta = NConta; 
+            conta.NConta = NConta;
             conta.IBAN = IBAN;
             conta.DataAbertura = DataAbertura;
             conta.TipoConta = TipoConta;
             conta.SaldoTotal = SaldoTotal;
+            conta.IDCliente = 0;
 
             return conta;
+        }
+
+        static void ListagemClientes(List<cliente> clientes)
+        {
+            Console.WriteLine("Clientes existentes:");
+            foreach (var cliente in clientes)
+            {
+                EscreverClienteEcra(cliente);
+            }
+        }
+
+        static int QualID(List<cliente> clientes)
+        {
+            Console.WriteLine("Digite o ID do cliente: ");
+            int qualid = Convert.ToInt32(Console.ReadLine());
+
+            var cliente = clientes.FirstOrDefault(c => c.ID == qualid);
+
+            if (cliente.ID != null)
+            {
+                Console.WriteLine($"Cliente encontrado: {cliente.Nome} (ID: {cliente.ID})");
+            }
+            else
+            {
+                Console.WriteLine($"O Cliente com o ID {qualid} não existe!");
+            }
+
+            return qualid;
+        }
+
+        static int QualIDMostrar(List<cliente> clientes, conta conta)
+        {
+            Console.WriteLine("Qual é o ID do Cliente: ");
+            int idcliente = Convert.ToInt32(Console.ReadLine());
+
+            var cliente = clientes.FirstOrDefault(c => c.ID == idcliente);
+
+            if (cliente.ID != null)
+            {
+                Console.WriteLine($"Cliente encontrado: {cliente.Nome} (ID: {cliente.ID})");
+                conta.IDCliente = idcliente;
+            }
+            else
+            {
+                Console.WriteLine($"O Cliente com o ID {idcliente} não existe!");
+            }
+
+            return idcliente;
         }
 
         static int QuantasContas()
@@ -84,7 +140,7 @@ namespace cgp_appv02
             return quantascontas;
         }
 
-        static conta[] CriarArrayConta(int quantascontas) 
+        static conta[] CriarArrayConta(int quantascontas)
         {
             conta[] arrayconta = new conta[quantascontas];
             return arrayconta;
@@ -95,12 +151,13 @@ namespace cgp_appv02
             conta conta;
             conta.NConta = 0;
             conta.IBAN = 0;
+            conta.IDCliente = 0;
             Console.WriteLine("Digite a data de abertura da Conta: ");
-            conta.DataAbertura = DateTime.Parse(Console.ReadLine());    
+            conta.DataAbertura = DateTime.Parse(Console.ReadLine());
             Console.WriteLine("Digite o Tipo de Conta: ");
             conta.TipoConta = Console.ReadLine();
             Console.WriteLine("Digite o Saldo da Conta: ");
-            conta.SaldoTotal = Decimal.Parse(Console.ReadLine());   
+            conta.SaldoTotal = Decimal.Parse(Console.ReadLine());
 
             return conta;
         }
@@ -108,7 +165,7 @@ namespace cgp_appv02
         static conta[] LerContas(conta[] arrayconta, int quantascontas)
         {
             conta atemp;
-            for(int i = 0; i < quantascontas; i++)
+            for (int i = 0; i < quantascontas; i++)
             {
                 Console.WriteLine("Conta {0}", i + 1);
                 atemp = LerConta();
@@ -126,7 +183,7 @@ namespace cgp_appv02
         static void EscreverContas(conta[] arrayconta, int quantascontas)
         {
             conta atemp;
-            for(int i = 0; i < quantascontas;i++)
+            for (int i = 0; i < quantascontas; i++)
             {
                 atemp = arrayconta[i];
                 EscreverConta(atemp);
@@ -182,10 +239,10 @@ namespace cgp_appv02
             return cartao;
         }
 
-        static cartao[] LerCartoes(cartao[] arraycartao,int quantoscartoes)
+        static cartao[] LerCartoes(cartao[] arraycartao, int quantoscartoes)
         {
             cartao atemp;
-            for(int i = 0; i < quantoscartoes; i++)
+            for (int i = 0; i < quantoscartoes; i++)
             {
                 Console.WriteLine("Cartão: {0}", i + 1);
                 atemp = CriarCartao();
@@ -194,7 +251,7 @@ namespace cgp_appv02
             return arraycartao;
         }
 
-        static void EscreverCartao(cartao cartao) 
+        static void EscreverCartao(cartao cartao)
         {
             Console.WriteLine("Nº Conta: {0}, Saldo: {1}, Codigo: {2}",
                 cartao.NCartao, cartao.SaldoCartao, cartao.Codigo);
@@ -203,7 +260,7 @@ namespace cgp_appv02
         static void EscreverCartoes(cartao[] arraycartao, int quantoscartoes)
         {
             cartao atemp;
-            for(int i = 0; i < quantoscartoes;i++)
+            for (int i = 0; i < quantoscartoes; i++)
             {
                 atemp = arraycartao[i];
                 EscreverCartao(atemp);
@@ -214,13 +271,14 @@ namespace cgp_appv02
         static int Menu()
         {
             Console.WriteLine("\nMenu | Programa Alunos (List)");
-            Console.WriteLine("------+--------------");
-            Console.WriteLine(" 1 | Adicionar Cliente");
-            Console.WriteLine(" 2 | Mostrar Clientes");
+            Console.WriteLine("------+-----------------------------------");
+            Console.WriteLine(" 1 | Adicionar Clientes / Contas / Cartões");
+            Console.WriteLine(" 2 | Mostrar Clientes / Contas / Cartões");
+            Console.WriteLine(" 3 | Mostrar Movimentos da Conta");
             Console.WriteLine(" 0 | Sair / Terminar o programa");
             Console.Write("Escolha uma opção: ");
-            int opcao = Convert.ToInt32(Console.ReadLine());
-            return opcao;
+            int opcaopr = Convert.ToInt32(Console.ReadLine());
+            return opcaopr;
         }
 
         static void Main(string[] args)
@@ -250,13 +308,22 @@ namespace cgp_appv02
                         break;
 
                     case 3:
+                        ListagemClientes(clientes);
+                        int idSelecionado = QualID(clientes);
                         quantascontas = QuantasContas();
                         conta = CriarArrayConta(quantascontas);
                         LerContas(conta, quantascontas);
+                        EscreverContas(conta, quantascontas);
                         break;
+
 
                     case 4:
                         EscreverContas(conta, quantascontas);
+                        break;
+
+                    case 5:
+                        ListagemClientes(clientes);
+                        //int idSelecionadolist = QualIDMostrar(clientes);
                         break;
                 }
 
