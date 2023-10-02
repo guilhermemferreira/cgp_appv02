@@ -699,7 +699,7 @@ namespace cgp_appv02
 
         static bool ValidarOpcao(int opcao)
         {
-            return opcao >= 1 && opcao <= 5;
+            return opcao >= 1 && opcao <= 3;
         }
 
 
