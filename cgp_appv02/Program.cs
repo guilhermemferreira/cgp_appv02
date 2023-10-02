@@ -479,6 +479,26 @@ namespace cgp_appv02
         }
         #endregion
 
+        static int QualIDMostrar(List<cliente> clientes, conta conta)
+        {
+            Console.WriteLine("Qual é o ID do Cliente: ");
+            int idcliente = Convert.ToInt32(Console.ReadLine());
+
+            var cliente = clientes.FirstOrDefault(c => c.ID == idcliente);
+
+            if (cliente.ID != null)
+            {
+                Console.WriteLine($"Cliente encontrado: {cliente.Nome} (ID: {cliente.ID})");
+                conta.IDCliente = idcliente;
+            }
+            else
+            {
+                Console.WriteLine($"O Cliente com o ID {idcliente} não existe!");
+            }
+
+            return idcliente;
+        }
+
         static int QuantasContas()
         {
             Console.WriteLine("Digite quantas contas pretende criar: ");
