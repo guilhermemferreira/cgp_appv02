@@ -95,15 +95,16 @@ namespace cgp_appv02
 
             }
             cliente.Nacionalidade = nacionalidade;
-
-
+        
             return cliente;
         }
 
         static void EscreverClienteEcra(cliente cliente)
         {
-            Console.WriteLine("Nome: {0}; NIF: {1}; Nacionalidade {2}; ID: {3}",
-                cliente.Nome, cliente.NIF, cliente.Nacionalidade, cliente.ID);
+            Console.WriteLine("Nome: {0}; NIF: {1}; NIPC: {2}; Telefone: {3}; Nacionalidade {4}; ID: {5}",
+                cliente.Nome,  /*cliente.Morada,*/ cliente.NIF, cliente.NIPC,
+                /*cliente.DataNascimento,*/ cliente.Telefone, cliente.Nacionalidade,
+                cliente.ID);
         }
 
         static void EscreverClientesEcra(List<cliente> clientes)
@@ -118,8 +119,7 @@ namespace cgp_appv02
 
         #region Validacao do nome
 
-        static Regex regexNome = new Regex(@"^([A-Z][a-zÀ-ú '´]{2,50}) \b([A-Z][a-zÀ-ú '´]{2,50}) \b([A-Z][a-zÀ-ú '´]{2,50})$");
-
+        static Regex regexNome = new Regex(@"^[\p{L}'´]+\s([\p{L}'´]+(\s|.|,|-)?){1,9}[\p{L}'´]+$");
         static string Nome()
         {
             bool erro;
@@ -395,6 +395,7 @@ namespace cgp_appv02
         #region Conta
         struct conta
         {
+
             public int IDConta;
             public int IDCliente;
             public int NConta;
@@ -435,13 +436,16 @@ namespace cgp_appv02
             var cliente = clientes.FirstOrDefault(c => c.ID == qualid);
 
             if (cliente.ID != 0)
+            if (cliente.ID != null)
             {
                 Console.WriteLine($"Cliente encontrado: {cliente.Nome} (ID: {cliente.ID})");
             }
             else
             {
                 Console.WriteLine($"O Cliente com o ID {qualid} não existe!");
-            }
+                return qualid;
+            }   
+
             return qualid;
         }
 
@@ -478,6 +482,7 @@ namespace cgp_appv02
             }
         }
         #endregion
+
 
         static int QualIDMostrar(List<cliente> clientes, conta conta)
         {
@@ -641,15 +646,35 @@ namespace cgp_appv02
         static int Menu()
         {
             Console.WriteLine("\nMenu | Programa Alunos (List)");
-            Console.WriteLine("------+-----------------------------------");
-            Console.WriteLine(" 1 | Adicionar Clientes / Contas / Cartões");
-            Console.WriteLine(" 2 | Mostrar Clientes / Contas / Cartões");
-            Console.WriteLine(" 3 | Mostrar Movimentos da Conta");
+            Console.WriteLine("------+--------------");
+            Console.WriteLine(" 1 | Adicionar Cliente");
+            Console.WriteLine(" 2 | Mostrar Clientes");
             Console.WriteLine(" 0 | Sair / Terminar o programa");
             Console.Write("Escolha uma opção: ");
-            int opcaopr = Convert.ToInt32(Console.ReadLine());
-            return opcaopr;
+            string opcao = Console.ReadLine();
+
+            if (!Char.IsDigit(opcao[0]))
+            {
+                Console.WriteLine("Opção inválida. Escolha uma opção entre 1 e 3.");
+                return Menu();
+            }
+
+            int opcaoInt = Convert.ToInt32(opcao);
+
+            if (!ValidarOpcao(opcaoInt))
+            {
+                Console.WriteLine("Opção inválida. Escolha uma opção entre 1 e 3.");
+                return Menu();
+            }
+
+            return opcaoInt;
         }
+
+        static bool ValidarOpcao(int opcao)
+        {
+            return opcao >= 1 && opcao <= 3;
+        }
+
 
         static void Main(string[] args)
         {
@@ -694,6 +719,7 @@ namespace cgp_appv02
                     case 5:
                         ListagemClientes(clientes);
                         int qualidconta = QualIDConta(contas, clientes);
+                        //int idSelecionadolist = QualIDMostrar(clientes);
                         break;
                 }
 
