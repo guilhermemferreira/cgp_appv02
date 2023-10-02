@@ -155,7 +155,8 @@ namespace cgp_appv02
                 erro = false;
                 try
                 {
-                    if (DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dataNascimento))
+                    if (DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy", CultureInfo.InvariantCulture, 
+                        DateTimeStyles.None, out dataNascimento))
                     {
                         DateTime dataAtual = DateTime.Now;
                         int idade = dataAtual.Year - dataNascimento.Year;
@@ -592,89 +593,14 @@ namespace cgp_appv02
         }
         #endregion
 
-        #region Estrutura Cartao
-        struct cartao
-        {
-            public int NCartao;
-            public DateTime DataValidade;
-            public decimal SaldoCartao;
-            public int Codigo;
-        }
-
-        static cartao CriarCartao(int NCartao, DateTime DataValidade, decimal SaldoCartao, int Codigo)
-        {
-            cartao cartao;
-            cartao.NCartao = NCartao;
-            cartao.DataValidade = DataValidade;
-            cartao.SaldoCartao = SaldoCartao;
-            cartao.Codigo = Codigo;
-
-            return cartao;
-        }
-
-        static int QuantosCartoes()
-        {
-            Console.WriteLine("Quantos Cartões é que quer associar à Conta: ");
-            int quantoscartoes = Convert.ToInt32(Console.ReadLine());
-
-            return quantoscartoes;
-        }
-
-        static cartao[] CriarArrayCartao(int quantoscartoes)
-        {
-            cartao[] arraycartao = new cartao[quantoscartoes];
-            return arraycartao;
-        }
-
-        static cartao CriarCartao()
-        {
-            cartao cartao;
-            cartao.NCartao = 0;
-            Console.WriteLine("Data de Validade: ");
-            cartao.DataValidade = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("Digite o Saldo do Cartão: ");
-            cartao.SaldoCartao = Decimal.Parse(Console.ReadLine());
-            Console.WriteLine("Digite o Codigo do Cartão: ");
-            cartao.Codigo = Convert.ToInt32(Console.ReadLine());
-
-            return cartao;
-        }
-
-        static cartao[] LerCartoes(cartao[] arraycartao, int quantoscartoes)
-        {
-            cartao atemp;
-            for (int i = 0; i < quantoscartoes; i++)
-            {
-                Console.WriteLine("Cartão: {0}", i + 1);
-                atemp = CriarCartao();
-                arraycartao[i] = atemp;
-            }
-            return arraycartao;
-        }
-
-        static void EscreverCartao(cartao cartao)
-        {
-            Console.WriteLine("Nº Conta: {0}, Saldo: {1}, Codigo: {2}",
-                cartao.NCartao, cartao.SaldoCartao, cartao.Codigo);
-        }
-
-        static void EscreverCartoes(cartao[] arraycartao, int quantoscartoes)
-        {
-            cartao atemp;
-            for (int i = 0; i < quantoscartoes; i++)
-            {
-                atemp = arraycartao[i];
-                EscreverCartao(atemp);
-            }
-        }
-        #endregion
-
         static int Menu()
         {
-            Console.WriteLine("\nMenu | Programa Alunos (List)");
+            Console.WriteLine("\nMenu | Caixa Geral de Pobres");
             Console.WriteLine("------+--------------");
             Console.WriteLine(" 1 | Adicionar Cliente");
             Console.WriteLine(" 2 | Mostrar Clientes");
+            Console.WriteLine(" 3 | Criar Conta");
+            Console.WriteLine(" 4 | Mostrar Conta");
             Console.WriteLine(" 0 | Sair / Terminar o programa");
             Console.Write("Escolha uma opção: ");
             string opcao = Console.ReadLine();
@@ -682,7 +608,7 @@ namespace cgp_appv02
             if (!Char.IsDigit(opcao[0]))
             {
                 Console.Clear();
-                Console.WriteLine("Opção inválida. Escolha uma opção entre 1 e 3.");
+                Console.WriteLine("Opção inválida. Escolha uma opção entre 1 e 4.");
                 return Menu();
             }
 
@@ -699,7 +625,7 @@ namespace cgp_appv02
 
         static bool ValidarOpcao(int opcao)
         {
-            return opcao >= 1 && opcao <= 3;
+            return opcao >= 1 && opcao <= 5;
         }
 
 
@@ -707,10 +633,8 @@ namespace cgp_appv02
         {
             List<cliente> clientes = new List<cliente>();
             List<conta> contas = new List<conta>();
-            List<cartao> cartoes = new List<cartao>();
 
             conta[] conta = null;
-            cartao[] cartao = null;
 
             int quantascontas = 0;
 
@@ -746,7 +670,6 @@ namespace cgp_appv02
                     case 5:
                         ListagemClientes(clientes);
                         int qualidconta = QualIDConta(contas, clientes);
-                        //int idSelecionadolist = QualIDMostrar(clientes);
                         break;
                 }
 
