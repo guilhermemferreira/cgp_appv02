@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.NetworkInformation;
 using System.Text.RegularExpressions;
 
@@ -12,10 +13,10 @@ namespace cgp_appv02
         {
             public int ID;
             public string Nome;
-            //public string Morada;
+            public string Morada;
             public int NIF;
             public int NIPC;
-            //public DateTime DataNascimento;
+            public DateTime DataNascimento;
             public int Telefone;
             public string Nacionalidade;
         }
@@ -36,18 +37,6 @@ namespace cgp_appv02
 
             cliente.Nome = nome;
 
-
-            //string morada = Morada();
-            //if (morada == null)
-            //{
-            //    Console.WriteLine("Morada inválida.");
-            //}
-            //else
-            //{
-            //    Console.WriteLine("Morada: " + morada);
-            //}
-            //cliente.Morada = morada;
-
             int nif = NIF();
 
             if (nif == null)
@@ -67,17 +56,6 @@ namespace cgp_appv02
 
             cliente.NIPC = nipc;
 
-            //DateTime dataNascimento = DataNascimento();
-            //if (dataNascimento == null)
-            //{
-            //    Console.WriteLine("Data de nascimento inválida.");
-            //}
-            //else
-            //{
-            //    Console.WriteLine("Data de nascimento: " + dataNascimento);
-            //}
-            //cliente.DataNascimento = dataNascimento;
-
             int telefone = Telefone();
 
             if (telefone == null)
@@ -95,15 +73,22 @@ namespace cgp_appv02
 
             }
             cliente.Nacionalidade = nacionalidade;
-        
+
+            DateTime dataNascimento = DataNascimento();
+            cliente.DataNascimento = dataNascimento;
+
+            Morada moradaCliente = MoradaCliente();
+            cliente.Morada = moradaCliente.ToString();
+
+
             return cliente;
         }
 
         static void EscreverClienteEcra(cliente cliente)
         {
-            Console.WriteLine("Nome: {0}; NIF: {1}; NIPC: {2}; Telefone: {3}; Nacionalidade {4}; ID: {5}",
-                cliente.Nome,  /*cliente.Morada,*/ cliente.NIF, cliente.NIPC,
-                /*cliente.DataNascimento,*/ cliente.Telefone, cliente.Nacionalidade,
+            Console.WriteLine("Nome: {0}; NIF: {1}; NIPC: {2}; Data Nascimento {3}; Telefone: {4}; Nacionalidade: {5}; Morada: {6};ID: {7}",
+                cliente.Nome, cliente.NIF, cliente.NIPC,
+                cliente.DataNascimento, cliente.Telefone, cliente.Nacionalidade, cliente.Morada,
                 cliente.ID);
         }
 
@@ -117,16 +102,19 @@ namespace cgp_appv02
         }
         #endregion
 
+        #region Validações
+
         #region Validacao do nome
 
         static Regex regexNome = new Regex(@"^[\p{L}'´]+\s([\p{L}'´]+(\s|.|,|-)?){1,9}[\p{L}'´]+$");
         static string Nome()
         {
+            Console.Clear();
             bool erro;
             string nome = "";
             do
             {
-                Console.Write("Insira o seu nome: ");
+                Console.Write("Insira o seu Nome Completo: ");
                 erro = false;
                 try
                 {
@@ -155,41 +143,53 @@ namespace cgp_appv02
         }
         #endregion
 
-        #region Validação da morada
-        //static Regex regexMorada = new Regex(@"^(\d{4}-\d{3}) ([\p{L}\s]+), ([\p{L}\s]+)$");
+        #region Validação da Data de Nascimento
+        static DateTime DataNascimento()
+        {
+            bool erro;
+            DateTime dataNascimento = DateTime.MinValue;
 
-        //static string Morada()
-        //{
-        //    bool erro;
-        //    string morada = "";
-        //    do
-        //    {
-        //        Console.Write("Insira a sua morada: ");
-        //        erro = false;
-        //        try
-        //        {
-        //            morada = Console.ReadLine();
+            do
+            {
+                Console.Write("Insira a sua data de nascimento (dd/mm/yyyy): ");
+                erro = false;
+                try
+                {
+                    if (DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dataNascimento))
+                    {
+                        DateTime dataAtual = DateTime.Now;
+                        int idade = dataAtual.Year - dataNascimento.Year;
 
-        //            if (!regexMorada.IsMatch(morada))
-        //            {
-        //                erro = true;
-        //                Console.WriteLine(
-        //                    "A morada deve ter o seguinte formato:\n" +
-        //                    "Código Postal[- ]Número[- ]Rua[- ]Localidade");
-        //            }
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            erro = true;
-        //            Console.WriteLine(
-        //                "Por favor introduza uma morada válida...");
-        //        }
-        //    } while (erro);
+                        if (dataNascimento > dataAtual.AddYears(-idade))
+                        {
+                            idade--;
+                        }
+                        if (idade < 18)
+                        {
+                            erro = true;
+                            Console.WriteLine("A data de nascimento introduzida não é válida. A pessoa deve ter mais de 18 anos!");
+                        }
+                        if (idade >= 110)
+                        {
+                            erro = true;
+                            Console.WriteLine("A data de nascimento introduzida não é válida. A pessoa deve ter menos de 110 anos.");
+                        }
+                    }
+                    else
+                    {
+                        erro = true;
+                        Console.WriteLine("A data de nascimento introduzida não é válida. Utilize o formato dd/mm/yyyy.");
+                    }
+                }
+                catch (Exception e)
+                {
+                    erro = true;
+                    Console.WriteLine("Por favor, introduza uma data de nascimento válida.");
+                }
+            } while (erro);
 
-        //    return regexMorada.IsMatch(morada) ? morada : null;
-        //}
-
-
+            return dataNascimento;
+        }
         #endregion
 
         #region Validação do NIF
@@ -264,53 +264,7 @@ namespace cgp_appv02
 
             return int.Parse(nipc);
         }
-
         #endregion
-
-        //#region Validação da data de nascimento
-        //static DateTime DataNascimento()
-        //{
-        //    bool erro;
-        //    DateTime dataNascimento;
-        //    string dataNascimentoString;
-
-        //    do
-        //    {
-        //        Console.Write("Insira a sua data de nascimento (DD/MM/AAAA): ");
-        //        erro = false;
-        //        try
-        //        {
-        //            // Declarar a variável dataNascimentoString
-        //            dataNascimentoString = Console.ReadLine();
-
-        //            if (!DateTime.TryParse(dataNascimentoString, out dataNascimento))
-        //            {
-        //                erro = true;
-        //                Console.WriteLine(
-        //                    "A data de nascimento introduzida é inválida. \n." +
-        //                    "A data de nascimento deve estar no formato DD/MM/AAAA.");
-        //            }
-        //            else if (dataNascimento > DateTime.Today)
-        //            {
-        //                erro = true;
-        //                Console.WriteLine(
-        //                    "A data de nascimento não pode ser futura.");
-        //            }
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            erro = true;
-        //            Console.WriteLine(
-        //                "Por favor introduza uma data de nascimento válida...");
-        //        }
-        //    } while (erro);
-
-        //    // Atribuir um valor à variável dataNascimento
-        //    dataNascimento = DateTime.Parse(dataNascimentoString);
-
-        //    return dataNascimento;
-        //}
-        //#endregion
 
         #region Validacao do Contacto telefónico
 
@@ -390,6 +344,78 @@ namespace cgp_appv02
 
             return regexNacionalidade.IsMatch(nacionalidade) ? nacionalidade : null;
         }
+        #endregion
+
+        #region Validar Morada
+        public struct Morada
+        {
+            public string TipoRua;
+            public string NomeRua;
+            public string Andar;
+            public string Porta;
+            public string Localidade;
+            public override string ToString()
+            {
+                return $"{TipoRua} {NomeRua}, {Andar} {Porta}, {Localidade}";
+            }
+        }
+
+        static Morada MoradaCliente()
+        {
+            Console.Clear();
+
+            Morada morada = new Morada();
+
+            Console.WriteLine("Introduza a morada:");
+
+            Console.Write("Tipo de Rua/Avenida (Primeira letra maiúscula): ");
+            morada.TipoRua = Console.ReadLine();
+            while (!Regex.IsMatch(morada.TipoRua, @"^[A-Z][a-z]*$"))
+            {
+                Console.WriteLine("Tipo de Rua inválido. Deve começar com letra maiúscula.");
+                Console.Write("Tipo de Rua/Avenida (Primeira letra maiúscula): ");
+                morada.TipoRua = Console.ReadLine();
+            }
+
+            Console.Write("Nome da Rua (Primeira letra maiúscula): ");
+            morada.NomeRua = Console.ReadLine();
+            while (!Regex.IsMatch(morada.NomeRua, @"^[A-Z][a-zA-Z\s]*$"))
+            {
+                Console.WriteLine("Nome da Rua inválido. Deve começar com letra maiúscula e conter apenas letras e espaços.");
+                Console.Write("Nome da Rua (Primeira letra maiúscula): ");
+                morada.NomeRua = Console.ReadLine();
+            }
+
+            Console.Write("Número do Andar / Vivenda: ");
+            string na = Console.ReadLine();
+
+            if (int.TryParse(na, out int andar))
+            {
+                string numeroAndarComSimbolo = andar + "º";
+                morada.Andar = numeroAndarComSimbolo;
+            }
+            else
+            {
+                morada.Andar = na;
+            }
+
+            Console.Write("Porta (pode ser uma direção ou letra): ");
+            morada.Porta = Console.ReadLine();
+
+            Console.Write("Localidade (Primeira letra maiúscula): ");
+            morada.Localidade = Console.ReadLine();
+            while (!Regex.IsMatch(morada.Localidade, @"^[A-Z][a-z]*$"))
+            {
+                Console.WriteLine("Localidade inválida. Deve começar com letra maiúscula.");
+                Console.Write("Localidade (Primeira letra maiúscula): ");
+                morada.Localidade = Console.ReadLine();
+            }
+
+            return morada;
+        }
+
+        #endregion
+
         #endregion
 
         #region Conta
@@ -655,6 +681,7 @@ namespace cgp_appv02
 
             if (!Char.IsDigit(opcao[0]))
             {
+                Console.Clear();
                 Console.WriteLine("Opção inválida. Escolha uma opção entre 1 e 3.");
                 return Menu();
             }
@@ -672,7 +699,7 @@ namespace cgp_appv02
 
         static bool ValidarOpcao(int opcao)
         {
-            return opcao >= 1 && opcao <= 3;
+            return opcao >= 1 && opcao <= 5;
         }
 
 
